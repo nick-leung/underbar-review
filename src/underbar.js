@@ -178,9 +178,14 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    _.each(collection, function(val){
-      accumulator = iterator(accumulator,val);
-    });
+    var idx = 0;
+    if (accumulator === undefined){
+      accumulator = collection[0];
+      idx++;
+    }
+    for (var i = idx; i < collection.length; i++) {
+      accumulator = iterator(accumulator, collection[i]);
+    }
     return accumulator;
   };
 
