@@ -178,7 +178,25 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    
+    var collectionCopy = collection;
+    if (accumulator === undefined){
+      if (Array.isArray(collection)) {
+        var collectionCopy = collection.slice(0);
+        accumulator = collectionCopy[0];
+        collectionCopy.shift();
+      } else {
+        var collectionCopy = Object.assign({},collection);
+        var keys = Object.keys(collection);
+        accumulator = collectionCopy[keys[0]];
+        delete collectionCopy[keys[0]];
+      }
+    }
+
+    _.each(collectionCopy, function(val){
+      accumulator = iterator(accumulator,val);
+    });
+    return accumulator;
+
     if (Array.isArray(collection)) {
       var idx = 0;
       if (accumulator === undefined){
